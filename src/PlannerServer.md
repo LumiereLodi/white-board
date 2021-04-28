@@ -76,6 +76,15 @@ here the student will see the exam result after the exam period. this will also 
 
 where the student can update information. 
 
+Nodejs/Express route: GET, POST, PUT, DELETE
+
+DATABASE: 
+WHAT ARE WE GOING TO STORE IN THE DATABASE ? 
+STUDENTS
+LECTURERS
+LIBRARIANS
+UNITS
+....
 
 
 
