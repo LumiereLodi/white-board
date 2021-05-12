@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS student(
 CREATE TABLE IF NOT EXISTS assessment(
     lecturerID TEXT NOT NULL,
     studentID TEXT NOT NULL,
-    assessmentID TEXT NOT NULL,
-    releaseDate TIMESTAMP,
+	unitCode TEXT NOT NULL,
+    createdAt TEXT DEFAULT TO_CHAR(NOW(), 'dd/mm/yyyy'),
     dueDate DATE,
     status TEXT,
     assessmentTitle TEXT,
@@ -86,10 +86,11 @@ CREATE TABLE IF NOT EXISTS assessment(
     grade INT,
     comment TEXT,
 
-    PRIMARY KEY (lecturerID, studentID, assessmentID),
+    PRIMARY KEY (lecturerID, studentID,createdAt,unitCode),
 
     FOREIGN KEY (lecturerID) REFERENCES lecturer (lecturerID),
-    FOREIGN KEY (studentID) REFERENCES student (studentID)
+    FOREIGN KEY (studentID) REFERENCES student (studentID),
+	FOREIGN KEY (unitCode) REFERENCES unit (unitCode)
 
 );
 
@@ -115,6 +116,7 @@ CREATE TABLE IF NOT EXISTS student_unit(
 
     PRIMARY KEY (unitCode, studentID),
 
+
     FOREIGN KEY (unitCode) REFERENCES unit (unitCode),
     FOREIGN KEY (studentID) REFERENCES student (studentID)
 
@@ -123,15 +125,20 @@ CREATE TABLE IF NOT EXISTS student_unit(
 CREATE TABLE IF NOT EXISTS onlineClass(
     lecturerID TEXT NOT NULL,
     unitCode TEXT NOT NULL,
-    classDate DATE,
+    classDay TEXT,
     classTime TEXT,
     classLink TEXT,
+    semester VARCHAR(1),
+    academicYear TEXT,
+    createdAt TEXT DEFAULT TO_CHAR(NOW(), 'dd/mm/yyyy'),
 
-    PRIMARY KEY (unitCode, lecturerID),
+    PRIMARY KEY (unitCode, lecturerID,classDay,classTime, semester, academicYear),
 
     FOREIGN KEY (unitCode) REFERENCES unit (unitCode),
     FOREIGN KEY (lecturerID) REFERENCES lecturer (lecturerID)
 );
+
+
 
 CREATE TABLE IF NOT EXISTS timetable(
     unitCode TEXT NOT NULL,
@@ -140,9 +147,9 @@ CREATE TABLE IF NOT EXISTS timetable(
     classDate DATE,
     classTime TEXT,
     semester VARCHAR(1),
-    timetableYear TEXT,
+    academicYear TEXT,
 
-    PRIMARY KEY (unitCode, studentID, lecturerID),
+    PRIMARY KEY (unitCode, studentID, lecturerID,academicYear),
 
     FOREIGN KEY (unitCode) REFERENCES unit (unitCode),
     FOREIGN KEY (lecturerID) REFERENCES lecturer (lecturerID),
@@ -150,13 +157,16 @@ CREATE TABLE IF NOT EXISTS timetable(
 
 );
 
-CREATE TABLE IF NOT EXISTS lecturer_studentSemesterReport(
+CREATE TABLE IF NOT EXISTS student_academicReport(
     unitCode TEXT NOT NULL,
     studentID TEXT NOT NULL,
     lecturerID TEXT NOT NULL,
     semesterMark INT,
     examMark INT,
     finalGrade INT,
+    academicYear TEXT,
+    semester VARCHAR(1),
+    YearlyReport TEXT,
 
     PRIMARY KEY (unitCode, studentID, lecturerID),
 
@@ -197,19 +207,33 @@ CREATE TABLE IF NOT EXISTS academic_record(
 CREATE TABLE IF NOT EXISTS exam_timetable(
     unitCode TEXT NOT NULL,
     lecturerID TEXT NOT NULL,
-    classDate DATE,
+    examDate DATE,
     classTime TEXT,
+    examVenue TEXT,
     adminID TEXT,
-    createdAt timestamp,
+    semester VARCHAR(1),
+    academicYear TEXT,
 
-    PRIMARY KEY (unitCode, lecturerID),
+    createdAt TEXT DEFAULT TO_CHAR(NOW(), 'dd/mm/yyyy'),
+
+    PRIMARY KEY (unitCode, lecturerID,academicYear),
 
     FOREIGN KEY (unitCode) REFERENCES unit (unitCode),
     FOREIGN KEY (lecturerID) REFERENCES lecturer (lecturerID)
 
 );
 
+CREATE TABLE category(
+    categoryID VARCHAR(3) PRIMARY KEY,
+    categoryName TEXT
+);
+
+CREATE TABLE bob(
+    categoryID VARCHAR(3) PRIMARY KEY,
+    categoryName TEXT
+);
 
 
 
 
+select * from onlineclasses
