@@ -3,10 +3,22 @@
 get the student timetable and the timetable table in postgres
 display it in the dashboard
 
+the student logs in and we query the timetable table
+GET /timetable/:id/:semester/:timetableyear
+
+#query to get student timetable
+select student_unit.studentid, student_unit.unitCode, 
+(select unit.unitname from unit where unit.unitCode = student_unit.unitCode) as UnitName, 
+(select onlineclass.classdate from onlineclass where onlineclass.unitCode = student_unit.unitCode), 
+(select onlineclass.classtime from onlineclass where onlineclass.unitCode = student_unit.unitCode)
+from student_unit
+where student_unit.studentid = '2850'
+
 #/myWhitboard/moodle
 
 you will show to student the units they are enrolled in
 you will show to lecturer the unit they are teaching
+
 
 #/myWhitboard/moodle/unit_ID
 
