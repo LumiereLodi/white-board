@@ -1016,7 +1016,7 @@ app.get("/academicreport/:studentid/:academicyear/:semester",async (req, res) =>
             "LEFT JOIN unit\n" +
             "on student_academicreport.unitcode = unit.unitcode\n" +
             "where student_academicreport.studentid = $1\n" +
-            "and student_academicreport.academicyear = $2\n" +
+            "and student_academicreport.  = $2\n" +
             "and student_academicreport.semester = $3 ", [
             req.params.studentid,
             req.params.academicyear,
@@ -1036,8 +1036,54 @@ app.get("/academicreport/:studentid/:academicyear/:semester",async (req, res) =>
         console.log(err)
     }
 });
+app.get("/availableunit/:studentid",async (req, res) => {
+    try{
+        const result = await db.query("select unit.*\n" +
+            "from unit\n" +
+            "left join student \n" +
+            "on student.faculty = unit.faculty\n" +
+            "where student.studentid = $1", [
+            req.params.studentid
 
+        ]);
+        console.log(result)
+        await res.status(200).json({
+            status: "success",
+            results: result.rows.length,
+            data: {
+                newStudent: result.rows[0],
+            }
+        })
 
+    }catch (err) {
+        console.log(err)
+    }
+});
+
+app.post("/studentunit",async (req, res) => {
+    try{
+        const result = await db.query("INSERT INTO \n" +
+            "student_unit (unitcode,studentid, semester,academicyear\n" +
+            "VALUES ($1,$2,$3,$4) RETURNING * ", [
+            req.body.unitcode,
+            req.body.studentid,
+            req.body.semester,
+            req.body.academicyear
+
+        ]);
+        console.log(result)
+        await res.status(200).json({
+            status: "success",
+            results: result.rows.length,
+            data: {
+                newAssessment: result.rows[0],
+            }
+        })
+
+    }catch (err) {
+        console.log(err)
+    }
+});
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`server listening on port ${port}...`)
