@@ -100,7 +100,7 @@ export default function PrimarySearchAppBar() {
 
     return (
         <div className={classes.grow}>
-            <AppBar position="static">
+            <AppBar position="static" style={{background: "#144896"}}>
                 <Toolbar>
                     <Typography className={classes.title} variant="h6" noWrap>
                         WHITE BOARD
