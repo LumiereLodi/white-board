@@ -22,7 +22,7 @@ import bookData from "../../API BOOK";
 // } from "react-router-dom";
 // toast.configure();
 
-//
+//book dashboard
 function App() {
         const bookComponent = bookData.map(
         item => {
