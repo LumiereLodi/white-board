@@ -6,12 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Login from "../login/index";
 import Register from "../register/index";
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch,
-    Redirect
-} from "react-router-dom";
+import AppBar from '../AppBar';
 
 
 const SignInOutContainer=({setAuth})=> {
@@ -20,8 +15,10 @@ const SignInOutContainer=({setAuth})=> {
         setValue(newValue);
     };
     const paperStyle={width:340,margin:"20px auto"}
+
     function TabPanel(props) {
         const { children, value, index, ...other } = props;
+
 
         return (
 
@@ -44,7 +41,8 @@ const SignInOutContainer=({setAuth})=> {
 
     return(
 
-
+<div>
+    <AppBar/>
     <Paper elevation={20} style={paperStyle}>
         <Tabs
             value={value}
@@ -65,6 +63,7 @@ const SignInOutContainer=({setAuth})=> {
             <Register setAuth={setAuth}/>
         </TabPanel>
     </Paper>
+</div>
 
 
     )

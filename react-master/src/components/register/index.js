@@ -9,7 +9,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 const Register = ({ setAuth }) => {
     const paperStyle = {padding :20, height : '70vh', width:300, margin: '0px auto'}
-    const avatarStyle = {backgroundColor:'#21a4d7'}
+    const avatarStyle = {backgroundColor:'#091477'}
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
@@ -72,13 +72,7 @@ const Register = ({ setAuth }) => {
                     }
                     label="Remember me"
                 />
-                <Button style={{ margin: "10px 0", backgroundColor:'#21a4d7' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Log in</Button>
-                <Typography >
-                    <Link href="#" >Forgot password ?</Link>
-                </Typography>
-                <Typography >
-                    <Link href="#" >IT help desk </Link>
-                </Typography>
+                <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Log in</Button>
                 <Typography >
                     <Link to="/login" >Login </Link>
                 </Typography>

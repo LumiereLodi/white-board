@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const Login= ({setAuth}) => {
     const paperStyle = {padding :20, height : '70vh', width:300, margin: '0px auto'}
-    const avatarStyle = {backgroundColor:'#21a4d7'}
+    const avatarStyle = {backgroundColor:'#091477'}
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -70,7 +70,7 @@ const Login= ({setAuth}) => {
                     }
                     label="Remember me"
                 />
-                <Button style={{ margin: "10px 0", backgroundColor:'#21a4d7' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Sign in</Button>
+                <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white'}} onClick={(e) => { onSubmitForm(e) }} fullWidth >Sign in</Button>
                 <Typography >
                     <Link href="#" >Forgot password ?</Link>
                 </Typography>
