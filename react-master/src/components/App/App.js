@@ -40,17 +40,19 @@ function App() {
             )
         })
   return (
+
     <div className="App">
         <div>
             <AppBar/>
         </div>
         <div>
-
-            {bookComponent}
+            <Books/>
+            {/*{bookComponent}*/}
         </div>
         {/*<AppBar/>*/}
         {/*<Wes/>*/}
     </div>
+
   );
 }
 
