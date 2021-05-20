@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^7.0.4"
   }

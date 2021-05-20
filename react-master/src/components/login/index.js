@@ -1,10 +1,11 @@
 //login
 import  React, {useState} from 'react'
-import {Grid, Paper, TextField, Typography, Button, Avatar, Link } from '@material-ui/core'
+import {Grid, Paper, TextField, Typography, Button, Avatar, Link, AppBar} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { toast } from "react-toastify";
+import NavBar from "../AppBar/whiteboardNav'"
 
 
 const Login= ({setAuth}) => {
@@ -51,6 +52,8 @@ const Login= ({setAuth}) => {
     }
 
     return (
+        <div>
+            <NavBar/>
         <Grid>
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
@@ -82,6 +85,7 @@ const Login= ({setAuth}) => {
                 </Typography>
             </Paper>
         </Grid>
+        </div>
 
     )
 }

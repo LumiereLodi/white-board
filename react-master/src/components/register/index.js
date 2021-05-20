@@ -3,6 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import {Avatar, Button, Grid, Paper, TextField, Typography} from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -15,6 +16,9 @@ const Register = ({ setAuth }) => {
     const [password2, setPassword2] = useState("");
     const [name, setStudentName] = useState("");
     const [profession, setProfession] = useState("");
+
+
+
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
@@ -72,7 +76,7 @@ const Register = ({ setAuth }) => {
                     }
                     label="Remember me"
                 />
-                <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Log in</Button>
+                <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Create Account</Button>
                 <Typography >
                     <Link to="/login" >Login </Link>
                 </Typography>

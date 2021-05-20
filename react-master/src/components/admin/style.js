@@ -1,5 +1,3 @@
-
-import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles=makeStyles((theme)=>({
@@ -15,7 +13,7 @@ const useStyles=makeStyles((theme)=>({
         flexDirection:'column',
         padding: theme.spacing(0),
         justifyContent:'center',
-
+        color:"#fff",
         width:theme.spacing(50),
         height:theme.spacing(25),
         margin:10
@@ -58,7 +56,7 @@ const useStyles=makeStyles((theme)=>({
         background:'#7C49AF'
     },
     paperColor2:{
-        background:'#fff'
+        background:'#091477'
     },
     paperActionArea:{
         disableRipple:true,

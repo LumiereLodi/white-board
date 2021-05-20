@@ -133,51 +133,6 @@ function Whiteboard() {
 
 	return (
 		<Router>
-			<div className={classes.grow}>
-				<AppBar position="static" style={{ background: "#144896" }}>
-					<Toolbar>
-						<Typography className={classes.title} variant="h6" noWrap>
-							WHITE BOARD
-						</Typography>
-						<div className={classes.grow} />
-						<div className={classes.sectionDesktop}>
-							<IconButton aria-label="show 4 new mails" color="inherit">
-								<Badge badgeContent={5} color="secondary">
-									<MailIcon />
-								</Badge>
-							</IconButton>
-							<IconButton
-								aria-label="show 17 new notifications"
-								color="inherit">
-								<Badge badgeContent={17} color="secondary">
-									<NotificationsIcon />
-								</Badge>
-							</IconButton>
-							<IconButton
-								edge="end"
-								aria-label="account of current user"
-								aria-controls={menuId}
-								aria-haspopup="true"
-								onClick={handleProfileMenuOpen}
-								color="inherit">
-								<AccountCircle />
-							</IconButton>
-						</div>
-						<div className={classes.sectionMobile}>
-							<IconButton
-								aria-label="show more"
-								aria-controls={mobileMenuId}
-								aria-haspopup="true"
-								onClick={handleMobileMenuOpen}
-								color="inherit">
-								<MoreIcon />
-							</IconButton>
-						</div>
-					</Toolbar>
-				</AppBar>
-				{renderMobileMenu}
-				{renderMenu}
-			</div>
 			{/* export default function CenteredGrid() {
         const classes = useStyles(); */}
 
@@ -242,10 +197,16 @@ function Whiteboard() {
 							<CardActionArea>
 								
 								<Paper className={classes.paper3 + " " + classes.paperColor1}>
-								<h1>Whiteboard</h1>
-									<Typography className={classes.title} variant="h6" noWrap>
-										Upcoming:
-									</Typography>
+									<div className={classes.grow}>
+										<AppBar position="flex" style={{ background: "#144896" }}>
+											<Toolbar>
+												<Typography className={classes.title} variant="h6" noWrap>
+													Upcoming Events
+												</Typography>
+
+											</Toolbar>
+										</AppBar>
+									</div>
                   <br></br>
                   <Typography className={classes.title} variant="h6" noWrap>
 										1.     Quiz 1: 

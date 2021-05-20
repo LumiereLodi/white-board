@@ -17,6 +17,7 @@ const validInfo = require('./middleware/validInfo')
 
 //MIDDLEWARE TO GET DATA FROM THE BODY. IT CONVERTS THE DATA TO A JAVASCRIPT OBJECT.
 app.use(express.json());
+app.use(cors());
 
 //MIDDLEWARE
 app.use((req, res, next) => {
