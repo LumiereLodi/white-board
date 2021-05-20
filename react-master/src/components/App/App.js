@@ -85,7 +85,7 @@ toast.configure();
 
 //
 function App() {
-    const [isAuthenticated, setIsAutenticated] = useState(true);
+    const [isAuthenticated, setIsAutenticated] = useState(false);
     const setAuth = (boolean) => {
         setIsAutenticated(boolean);
     }
@@ -133,25 +133,23 @@ function App() {
                               (<Dashboard {...props} setAuth={setAuth}/>) : (<Redirect to="/"/>)
                       }/>
 
-                      <Route exact path="/whiteboard" render={props =>
-                          isAuthenticated ?
-                              (<Whiteboard {...props} setAuth={setAuth}/>) : (<Redirect to="/"/>)
-                      }/>
+
                       <Route exact path="/admin" render={props =>
-                          isAuthenticated ?
-                              (<Admin {...props} setAuth={setAuth}/>) : (<Redirect to="/"/>)
-                      }/>
-                      <Route exact path="/admin-lecturer" render={props =>
-                          isAuthenticated ?
-                              (<Lecturer {...props} setAuth={setAuth}/>) : (<Redirect to="/"/>)
+                          <Admin {...props} />
                       }/>
                       <Route exact path="/admin-student" render={props =>
-                          isAuthenticated ?
-                              (<Lecturer {...props} setAuth={setAuth}/>) : (<Redirect to="/register"/>)
+                          <Student {...props} />
+                      }/>
+                      <Route exact path="/admin-student" render={props =>
+                          <Student {...props} />
                       }/>
                       <Route exact path="/admin-librarian" render={props =>
-                          isAuthenticated ?
-                              (<Lecturer {...props} setAuth={setAuth}/>) : (<Redirect to="/"/>)
+                          <Student {...props} />
+                      }/>
+
+
+                      <Route exact path="/whiteboard" render={props =>
+                          <Whiteboard {...props} />
                       }/>
 
                       <Route exact path="/FIT1010" render={props =>
@@ -164,8 +162,6 @@ function App() {
                       <Route exact path="/WES" render={props =>
                           <Wes {...props} />
                       }/>
-
-
 
                   </Switch>
               </div>

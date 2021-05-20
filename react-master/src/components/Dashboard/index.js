@@ -46,10 +46,13 @@ const Dashboard = ({setAuth}) => {
     return (
         <div>
             <AppBar/>
-            <h2>Welcome  {name}</h2>
-            <button onClick={e => logout(e)}>
-                Logout
-            </button>
+            <div>
+                <h2 onClick={e => logout(e)}>Welcome  {name}</h2>
+            </div>
+
+            {/*<button onClick={e => logout(e)}>*/}
+            {/*    Logout*/}
+            {/*</button>*/}
             <Grid container className={classes.rootContainer} justify={'center'}>
                 <Grid container justify={'center'}>
                     <Grid item>
