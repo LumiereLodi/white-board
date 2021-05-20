@@ -36,5 +36,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-linkify": "^1.0.0-alpha",
+    "react-router-dom": "^5.2.0",
+    "react-toastify": "^7.0.4"
   }
 }
