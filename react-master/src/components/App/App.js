@@ -5,6 +5,7 @@ import AppBar from '../AppBar';
 import Wes from '../wes'
 import Books from '../Books'
 import bookData from "../../API BOOK";
+import Whiteboard from "../whiteboard";
 
 // import SignInOutContainer from "../Login&Register/index";
 // import React, { Fragment, useState, useEffect } from "react";
@@ -46,7 +47,8 @@ function App() {
             <AppBar/>
         </div>
         <div>
-            <Books/>
+        <Whiteboard/>
+            {/*<Books/>*/}
             {/*{bookComponent}*/}
         </div>
         {/*<AppBar/>*/}
