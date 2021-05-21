@@ -3,9 +3,9 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     paperStyle:{
         padding :20,
-        height : '60vh',
+        height : '50vh',
         width:300,
-        margin: '50px auto'
+        margin: '100px auto'
 
 
     },

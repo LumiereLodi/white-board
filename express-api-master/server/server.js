@@ -29,14 +29,16 @@ app.use((req, res, next) => {
 
 //NOTE TO SELF: MAKE SURE YOU HAVE CHANGED STUDENTTIMETABLE VARIABLE EVERYWHERE ;)
 
-app.get("/timetable/:id/:semester/:academicyear",async (req, res) => {
+app.get("/timetable/:id/:semester/",async (req, res) => {
     try{
         console.log(req.params.id + " " + req.params.semester + " " + req.params.academicyear)
-        const result = await db.query("select timetable.*, unit.unitname\n" +
-            "from timetable\n" +
-            "left join unit\n" +
-            "on timetable.unitcode = unit.unitcode \n" +
-            "where timetable.studentid = $1 AND timetable.semester = $2 and timetable.academicyear = $3 ", [req.params.id,req.params.semester,req.params.academicyear ]);
+        const result = await db.query("select timetable.*, unit.unitname, lecturer.lecturergivenname\n" +
+            "            from timetable\n" +
+            "            left join unit\n" +
+            "            on timetable.unitcode = unit.unitcode\n" +
+            "            left join lecturer\n" +
+            "            on timetable.lecturerid = lecturer.lecturerid \n" +
+            "            where timetable.studentid = $1 AND timetable.semester = $2 and timetable.academicyear = TO_CHAR(NOW(), 'yyyy')", [req.params.id,req.params.semester ]);
         console.log(result)
         await res.status(200).json({
             status: "success",
@@ -1127,6 +1129,98 @@ app.post("/studentunit",async (req, res) => {
                                         /**LOGIN AND REGISTRATION*/
 /***********************************************************************************************/
 
+//create a user
+app.post("/student-user",validInfo, async(req,res)=>{
+    try{
+
+        function validEmail(userEmail) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+        }
+
+
+        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship,studentid,password,password2} = req.body;
+
+        if(email ==="" || studentname ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.json("Invalid Email or password");
+        }
+
+
+        if (password !== password2) {
+            return res.status(401).json("password do not match")
+        }
+
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const bcryptPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residenceAddress, academicStatus,dateofbirth,citizenship,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *",
+            [studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship, bcryptPassword]);
+        res.json(newUser.rows[0])
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+})
+
+app.get("/student-user", async(req,res)=>{
+    try{
+        const allStudent = await db.query("SELECT * FROM student")
+        res.json(allStudent.rows);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+//get all libararian
+//GET LIbarian
+app.post("/librarian-user",validInfo, async(req,res)=>{
+    try{
+
+        function validEmail(userEmail) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+        }
+
+
+        const{librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid} = req.body;
+
+
+        if(email ==="" || librarianname ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.json("Invalid Email or password");
+        }
+
+        const newUser = await db.query("INSERT INTO librarian(librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
+            [librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid]);
+        res.json(newUser.rows[0]);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
+//get all users
+app.get("/librarian-user", async(req,res)=>{
+    try{
+        const allLibarian = await db.query("SELECT * FROM librarian")
+        res.json(allLibarian.rows);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
+
 //Login
 app.post("/login", validInfo, async (req,res)=>{
     const {email, password} = req.body;
@@ -1387,7 +1481,7 @@ app.get("/dashboard", authorization, async (req, res)=>{
 
         if(student.rows.length !== 0){
             const user = await db.query(
-                "SELECT studentname FROM student WHERE email = $1",
+                "SELECT studentname, studentid FROM student WHERE email = $1",
                 [req.user]);
             res.json(user.rows[0]);
 

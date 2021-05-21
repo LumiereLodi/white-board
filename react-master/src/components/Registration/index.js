@@ -29,7 +29,7 @@ const Register = ({ setAuth }) => {
         try {
             const body = { email, password, name, profession, password2 };
             const response = await fetch(
-                "http://localhost:3001/register",
+                "http://localhost:3000/login",
                 {
                     method: "POST",
                     headers: {
@@ -60,15 +60,12 @@ const Register = ({ setAuth }) => {
             <Paper elevation={10} className={classes.paperStyle} >
                 <Grid align='center'>
                     <Avatar className={classes.avatar}><LockOutlinedIcon/></Avatar>
-                    <h2>Register</h2>
+                    <h2>Admin Login</h2>
                 </Grid>
-                <TextField label="Profession" name="profession" type="text" fullWidth required value={profession}
-                           onChange={e=>setProfession(e.target.value)} />
+
                 <TextField label="Email" name="email" type="email" fullWidth required value={email}
                            onChange={e=>setUsername(e.target.value)} />
-                <TextField label="Full Name" name="name" type="text"  fullWidth required value={name}
-                           onChange={e=>setStudentName(e.target.value)} />
-                <TextField label="Create Password"  name="password" type='password' fullWidth required  value={password}  onChange={e=>setPassword(e.target.value)}/>
+                <TextField label="Password"  name="password" type='password' fullWidth required  value={password}  onChange={e=>setPassword(e.target.value)}/>
                 <TextField label="Confirm Password" name="password2" type='password' fullWidth required  value={password2}  onChange={e=>setPassword2(e.target.value)}/>
 
                 <FormControlLabel
@@ -80,11 +77,9 @@ const Register = ({ setAuth }) => {
                     }
                     label="Remember me"
                 />
-                <Button style={{ margin: "10px 0", backgroundColor:'#144896', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Create Account</Button>
+                <Button style={{ margin: "10px 0", backgroundColor:'#144896', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Login</Button>
                 <Typography >
-                    <BrowserRouter>
-                        <Link to="/login" >Login </Link>
-                    </BrowserRouter>
+
 
                 </Typography>
             </Paper>

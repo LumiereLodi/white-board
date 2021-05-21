@@ -82,6 +82,9 @@ const Login= () => {
                         }
                         label="Remember me"
                     />
+                    <Typography >
+                        <Link href="/Registration" >Admin</Link>
+                    </Typography>
                     <Button style={{ margin: "25px 0", backgroundColor:'#144896', color:'white'}} onClick={(e) => { onSubmitForm(e) }} fullWidth >Sign in</Button>
                 </Paper>
             </Grid>

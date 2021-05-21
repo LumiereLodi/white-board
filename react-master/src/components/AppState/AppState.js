@@ -48,9 +48,16 @@ export function createAppStore(){
             console.log(...this.selectedTimetable)
 
         },
-        authentication: false,
+        authentication: true,
         setAuth(connected){
             this.authentication =  connected
+        },
+
+        studentSemesterUnit:[],
+        getStudentSemesterUnit(units){
+            this.studentSemesterUnit.push(
+                ...units
+            )
         }
 
     }
