@@ -4,10 +4,16 @@ import '../../App.css';
 import AppBar from '../AppBar';
 import Wes from '../wes'
 import Books from '../Books'
+import BookInvoice from '../Books/bookInvoice'
 import bookData from "../../API BOOK";
 import Whiteboard from "../whiteboard";
 import Page1 from"../unit info";
+// import Parent from "../parentToChild/parent";
+// import Child from "../parentToChild/child";
+import AddUser from "../admin/AddUser";
 
+import Parent from "../Books/bookParent'";
+import Child from "../Books/bookChild";
 
 import React, { Fragment, useState, useEffect } from "react";
 import {toast} from 'react-toastify'
@@ -20,6 +26,8 @@ import Admin from "../admin/index";
 import Lecturer from "../admin/lecturer";
 import librarian from "../admin/libarian";
 import Student from "../admin/student";
+import EditStudent from "../admin/EditUser";
+
 //
 import {
     BrowserRouter as Router,
@@ -162,6 +170,29 @@ function App() {
                       <Route exact path="/WES" render={props =>
                           <Wes {...props} />
                       }/>
+                      {/*<Route exact path="/books" render={props =>*/}
+                      {/*    <Child {...props} />*/}
+                      {/*}/>*/}
+                      {/*<Route exact path="/books-invoice" render={props =>*/}
+                      {/*    <Parent {...props} />*/}
+                      {/*}/>*/}
+                      <Route exact path="/parent" render={props =>
+                          <Parent {...props} />
+                      }/>
+                      <Route exact path="/child" render={props =>
+                          <Child {...props} />
+                      }/>
+                      <Route exact path="/student-user" render={props =>
+                          <AddUser {...props} />
+                      }/>
+                      <Route exact path="/student-user/:id" render={props =>
+                          <EditStudent {...props} />
+                      }/>
+
+
+
+
+
 
                   </Switch>
               </div>

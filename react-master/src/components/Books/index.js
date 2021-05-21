@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -14,9 +14,13 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import Grid from '@material-ui/core/Grid';
 import useStyles from "./style";
 import bookData from "../../API BOOK";
+import AppBar  from "../AppBar/index"
+import {toast} from "react-toastify";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
-export default function Books(props, theme) {
+
+export default function Books(props, theme, setAuth) {
     const classes = useStyles();
     const data = [
         {
@@ -91,7 +95,11 @@ export default function Books(props, theme) {
 
         },
     ]
+
+
     return (
+
+
 //
 // <center>
 //     <Card className={classes.root}>
@@ -127,7 +135,8 @@ export default function Books(props, theme) {
 //
 // </center>
 
-        <center>
+        <div>
+            <AppBar/>
             <Grid
                 container
                 spacing={2}
@@ -159,9 +168,11 @@ export default function Books(props, theme) {
                                     </CardContent>
                                 </CardActionArea>
                                 <CardActions>
+                                    <Link to="/books-invoice">
                                     <Button size="small" color="primary">
                                         Purchase
                                     </Button>
+                                    </Link>
                                     <Button size="small" color="primary">
                                         Description
                                     </Button>
@@ -170,7 +181,8 @@ export default function Books(props, theme) {
                     </Grid>
                 ))}
             </Grid>
-        </center>
+
+        </div>
 
     );
 }

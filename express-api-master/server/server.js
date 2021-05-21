@@ -25,13 +25,94 @@ app.use((req, res, next) => {
     next();
 });
 
+//create a user
+app.post("/student-user",validInfo, async(req,res)=>{
+    try{
 
+        function validEmail(userEmail) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+        }
+
+
+        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship} = req.body;
+        const randomID = math();
+
+        if(email ==="" || studentname ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.json("Invalid Email or password");
+        }
+
+        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
+            [randomID, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship]);
+        res.json(newUser.rows[0]);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+//get all users
+app.get("/student-user", async(req,res)=>{
+    try{
+        const allStudent = await db.query("SELECT * FROM student")
+        res.json(allStudent.rows);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+//get student with id
+app.get("/student-user/:id", async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const user =  await db.query("SELECT * FROM student WHERE studentid= $1",[id])
+        res.json(user.rows[0])
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
+//update a user
+app.put("/student-user/:id", async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const {studentname} = req.body;
+        const updateTodo = await db.query("UPDATE student SET studentname = $1 WHERE studentid= $2",{studentname,id})
+        console.log("student edited")
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
+//remove student
+app.delete ('/student-user/:id', async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const deleteStudent = await db.query("DELETE FROM student WHERE studentid = $1",[id]);
+        res.json("Student was deleted");
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
 //Login
 app.post("/login", validInfo, async (req,res)=>{
     const {email, password} = req.body;
 
+    function validEmail(userEmail) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+    }
+
 
     try {
+
         const student = await db.query(
             "SELECT email FROM student WHERE email = $1",
             [email]);
@@ -44,6 +125,17 @@ app.post("/login", validInfo, async (req,res)=>{
         const administrator = await db.query(
             "SELECT email FROM administrator WHERE email = $1",
             [email]);
+
+        if(email ==="" || password ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.json("Invalid Email or password");
+        }
+
+
+
 
 
         if(student.rows.length !== 0){
@@ -613,7 +705,7 @@ app.get("/lecturerunit/:id/", async (req, res) => {
 
 app.get("/book", async (req, res) => {
     try{
-        const result = await db.query(" SELECT * FROM book");
+        const result = await db.query("SELECT * FROM book");
         console.log(result)
         await res.status(200).json({
             status: "success",

@@ -20,6 +20,10 @@ CREATE TABLE IF NOT EXISTS librarian(
     FOREIGN KEY (adminID) REFERENCES administrator(adminID)
 
 );
+INSERT INTO BOOK (bookID, bookTitle) VALUES ('1','database');
+
+Insert Into Student Values ('300001', 'Natasha Cooper','0874567899', to_date('14-Apr-1998', 'DD-MON-YYYY'), 'South Africa', 'F', '45 Raggy Place', 'Johannesburg', 'Completed', '2019',
+                            to_date('11-Mar-2019', 'DD-MON-YYYY'), 'nc@student.belmand.com', 'PASS', 'https://nc.imagelink', 'AD01');
 
 CREATE TABLE IF NOT EXISTS book (
     bookID TEXT,
