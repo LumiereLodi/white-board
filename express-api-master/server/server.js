@@ -45,7 +45,7 @@ app.post("/student-user",validInfo, async(req,res)=>{
             return res.json("Invalid Email or password");
         }
 
-        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
+        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residenceAddress, academicStatus,dateofbirth,citizenship) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
             [randomID, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship]);
         res.json(newUser.rows[0]);
         console.log(req.body);

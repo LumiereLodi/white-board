@@ -77,6 +77,7 @@ const InputUser = () => {
                     <br></br>
                     <br></br>
                     <input
+                        required
                         type="text"
                         value={studentname}
                         onChange={e => setStudentName(e.target.value)}

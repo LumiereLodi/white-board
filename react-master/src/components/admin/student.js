@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { TextField, Typography, Button, Avatar, Link, AppBar} from '@material-ui/core'
 import Paper from '@material-ui/core/Paper';
 import AppBar2 from '../AppBar/index';
+import { toast } from "react-toastify";
 
 
 const StyledTableCell = withStyles((theme) => ({
