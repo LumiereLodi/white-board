@@ -14,7 +14,7 @@ import AppBar from '../AppBar/index'
 
 const Dashboard = ({setAuth}) => {
     const [name, setName] = useState("");
-    const [id,setID] = useState("")
+    const [id,setID] = useState("");
     const getProfile = async () => {
         try {
             const res = await fetch("http://localhost:3001/dashboard/", {

@@ -41,7 +41,7 @@ const Register = ({ setAuth }) => {
             if (parseRes.token) {
                 localStorage.setItem("token", parseRes.token);
                 setAuth(true);
-                toast.success("Register Successfully");
+                toast.success("Log in Successfully");
             } else {
                 setAuth(false);
                 toast.error(parseRes);
@@ -58,7 +58,7 @@ const Register = ({ setAuth }) => {
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
-                    <h2>Register</h2>
+                    <h2>Admin Sign In</h2>
                 </Grid>
                 <TextField label="Profession" name="profession" type="text" fullWidth required value={profession}
                            onChange={e=>setProfession(e.target.value)} />
@@ -78,9 +78,10 @@ const Register = ({ setAuth }) => {
                     }
                     label="Remember me"
                 />
-                <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >Create Account</Button>
                 <Typography >
-                    <Link to="/login" >Login </Link>
+                    <Link to="/admin-student" >
+                        <Button style={{ margin: "10px 0", backgroundColor:'#091477', color:'white' }} onClick={(e) => { onSubmitForm(e) }} fullWidth >LOG IN</Button>
+                    </Link>
                 </Typography>
             </Paper>
         </Grid>

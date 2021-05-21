@@ -34,7 +34,7 @@ app.post("/student-user",validInfo, async(req,res)=>{
         }
 
 
-        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship,studentid} = req.body;
+        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship,studentid,password,password2} = req.body;
         const randomID = math();
 
         if(email ==="" || studentname ===""){
@@ -45,8 +45,17 @@ app.post("/student-user",validInfo, async(req,res)=>{
             return res.json("Invalid Email or password");
         }
 
-        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residenceAddress, academicStatus,dateofbirth,citizenship) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
-            [studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship]);
+
+        if (password !== password2) {
+            return res.status(401).json("password do not match")
+        }
+
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const bcryptPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residenceAddress, academicStatus,dateofbirth,citizenship,password) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *",
+            [studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship, bcryptPassword]);
         res.json(newUser.rows[0]);
         console.log(req.body);
     }
@@ -73,6 +82,9 @@ app.post("/librarian-user",validInfo, async(req,res)=>{
         if (!validEmail(email)) {
             return res.json("Invalid Email or password");
         }
+
+
+
 
         const newUser = await db.query("INSERT INTO librarian(librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
             [librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid]);

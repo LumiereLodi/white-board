@@ -3,7 +3,7 @@ import '../../App.css';
 // import React from "react";
 import AppBar from '../AppBar';
 import Wes from '../wes'
-import Books from '../Books'
+import Books from '../Books/index'
 import BookInvoice from '../Books/bookInvoice'
 import bookData from "../../API BOOK";
 import Whiteboard from "../whiteboard";
@@ -39,59 +39,6 @@ import {
 } from "react-router-dom";
 toast.configure();
 
-// //book dashboard
-// function App() {
-//
-//
-//         const bookComponent = bookData.map(
-//         item => {
-//             return (
-//
-//                 <Books key={item.id}
-//                        name={item.name}
-//                        imgUrl={item.imgUrl}
-//                        title ={item.title}
-//                        author = {item.author}
-//                        price = {item.Price}
-//                        quantity = {item.Quantity}
-//
-//                 />
-//             )
-//         })
-//   return (
-//       <Router>
-//           <div>
-//               <Switch>
-//                   <Route exact path="/whiteboard" render={props =>
-//                       <Whiteboard {...props} />
-//                       }/>
-//                   <Route exact path="/FIT1010" render={props =>
-//                       <Page1 {...props} />
-//                   }/>
-//
-//
-//
-//               </Switch>
-//           </div>
-//
-//       </Router>
-//
-//     // <div className="App">
-//     //     <div>
-//     //         <AppBar/>
-//     //     </div>
-//     //     <div>
-//     //         <Page1/>
-//     //     {/*<Whiteboard/>*/}
-//     //         {/*<Books/>*/}
-//     //         {/*{bookComponent}*/}
-//     //     </div>
-//     //     {/*<AppBar/>*/}
-//     //     {/*<Wes/>*/}
-//     // </div>
-//
-//   );
-// }
 
 //
 function App() {
@@ -169,12 +116,10 @@ function App() {
                       <Route exact path="/WES" render={props =>
                           <Wes {...props} />
                       }/>
-                      {/*<Route exact path="/books" render={props =>*/}
-                      {/*    <Child {...props} />*/}
-                      {/*}/>*/}
-                      {/*<Route exact path="/books-invoice" render={props =>*/}
-                      {/*    <Parent {...props} />*/}
-                      {/*}/>*/}
+                      <Route exact path="/books" render={props =>
+                          <Child {...props} />
+                      }/>
+
                       <Route exact path="/parent" render={props =>
                           <Parent {...props} />
                       }/>

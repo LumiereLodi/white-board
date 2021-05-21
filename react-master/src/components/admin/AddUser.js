@@ -47,11 +47,13 @@ const InputUser = () => {
     const [dateofbirth ,setdateofbirth] = useState("")
     const [citizenship ,setcitizenship] = useState("")
     const [startingdate ,setstartingdate] = useState("")
+    const [password, setPassword] = useState("");
+    const [password2, setPassword2] = useState("");
 
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = {studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship };
+            const body = {studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship ,password,password2};
             const response = await fetch("http://localhost:3001/student-user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -101,6 +103,24 @@ const InputUser = () => {
                         type="text"
                         value={email}
                         onChange={e => setStudentEmail(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
+                    <label>Create Password</label>
+                    <br></br>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
+                    <label>Confirm Password</label>
+                    <br></br>
+                    <input
+                        type="password"
+                        value={password2}
+                        onChange={e => setPassword2(e.target.value)}
                     />
                     <br></br>
                     <br></br>
