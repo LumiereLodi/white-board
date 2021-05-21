@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from '@material-ui/core/CardActions';
 import Card from '@material-ui/core/Card';
 import CardActionArea from "@material-ui/core/CardActionArea";
-export default function CenteredGrid() {
+export default function WesDashboard() {
     const classes = useStyles();
 
     return (
@@ -15,7 +15,7 @@ export default function CenteredGrid() {
            <Grid container className = {classes.rootContainer} justify="center">
                <Grid container justify="center">
                    <Grid item >
-                       <CardActionArea >
+                       <CardActionArea>
                            <Paper className={classes.paper + " " + classes.paperColor1} >
                                <Typography className={classes.title} variant="h4" noWrap>
                                    Unofficial academic <br/> record

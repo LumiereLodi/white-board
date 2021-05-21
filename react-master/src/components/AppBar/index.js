@@ -15,9 +15,12 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import useStyles from './style.js';
+import {useObserver} from "mobx-react"
+import {useAppState} from "../WithStore"
 
 export default function PrimarySearchAppBar() {
     const classes = useStyles();
+     const appState = useAppState();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -98,51 +101,63 @@ export default function PrimarySearchAppBar() {
         </Menu>
     );
 
-    return (
+    return useObserver(()=>(
+
+
         <div className={classes.grow}>
-            <AppBar position="static" style={{background: "#144896"}}>
+            <AppBar position="static" style={{background: "#144896", width:"100%"}} xs={12}>
                 <Toolbar>
                     <Typography className={classes.title} variant="h6" noWrap>
                         WHITE BOARD
                     </Typography>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={5} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
+                    {
+                        appState.authentication ? (
+                            <>
+                                <div className={classes.grow} />
+                            <div className={classes.sectionDesktop}>
+                                <IconButton aria-label="show 4 new mails" color="inherit">
+                                    <Badge badgeContent={5} color="secondary">
+                                        <MailIcon />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton aria-label="show 17 new notifications" color="inherit">
+                                    <Badge badgeContent={17} color="secondary">
+                                        <NotificationsIcon />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleProfileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </div>
+                        <div className={classes.sectionMobile}>
                         <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        onClick={handleMobileMenuOpen}
+                        color="inherit"
                         >
-                            <AccountCircle />
+                        <MoreIcon />
                         </IconButton>
-                    </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
+                        </div>
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )
+                    }
+
                 </Toolbar>
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
         </div>
-    );
+    ));
 }
