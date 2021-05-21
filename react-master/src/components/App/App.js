@@ -11,6 +11,7 @@ import Page1 from"../unit info";
 // import Parent from "../parentToChild/parent";
 // import Child from "../parentToChild/child";
 import AddUser from "../admin/AddUser";
+import Addlibrarian from "../admin/Addlibrarian";
 
 import Parent from "../Books/bookParent'";
 import Child from "../Books/bookChild";
@@ -18,7 +19,7 @@ import Child from "../Books/bookChild";
 import React, { Fragment, useState, useEffect } from "react";
 import {toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
-import SignInOutContainer from "../Login&Register/index";
+// import SignInOutContainer from "../Login&Register/index";
 import Login from "../login/index";
 import Register from "../register/index";
 import Dashboard from "../Dashboard/index";
@@ -27,6 +28,7 @@ import Lecturer from "../admin/lecturer";
 import librarian from "../admin/libarian";
 import Student from "../admin/student";
 import EditStudent from "../admin/EditUser";
+import Librarian from "../admin/libarian";
 
 //
 import {
@@ -126,7 +128,7 @@ function App() {
                   <Switch>
                       <Route exact path="/" render={props =>
                           !isAuthenticated ?
-                              (<SignInOutContainer {...props} setAuth={setAuth}/>) : (<Redirect to="/dashboard"/>)
+                              (<Login {...props} setAuth={setAuth}/>) : (<Redirect to="/dashboard"/>)
                       }/>
                       <Route exact path="/login" render={props =>
                           !isAuthenticated ?
@@ -148,11 +150,8 @@ function App() {
                       <Route exact path="/admin-student" render={props =>
                           <Student {...props} />
                       }/>
-                      <Route exact path="/admin-student" render={props =>
-                          <Student {...props} />
-                      }/>
                       <Route exact path="/admin-librarian" render={props =>
-                          <Student {...props} />
+                          <Librarian {...props} />
                       }/>
 
 
@@ -185,9 +184,10 @@ function App() {
                       <Route exact path="/student-user" render={props =>
                           <AddUser {...props} />
                       }/>
-                      <Route exact path="/student-user/:id" render={props =>
-                          <EditStudent {...props} />
+                      <Route exact path="/librarian-user" render={props =>
+                          <Addlibrarian {...props} />
                       }/>
+
 
 
 

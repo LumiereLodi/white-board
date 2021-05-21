@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import {Avatar, Button, Grid, Paper, TextField, Typography} from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
+import AppBar from "../AppBar/whiteboardNav'"
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -52,7 +52,9 @@ const Register = ({ setAuth }) => {
     };
 
     return (
-        <Grid>
+        <div>
+            <AppBar/>
+            <Grid>
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
                     <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
@@ -82,6 +84,7 @@ const Register = ({ setAuth }) => {
                 </Typography>
             </Paper>
         </Grid>
+        </div>
 
     );
 };

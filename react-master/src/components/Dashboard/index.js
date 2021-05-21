@@ -14,6 +14,7 @@ import AppBar from '../AppBar/index'
 
 const Dashboard = ({setAuth}) => {
     const [name, setName] = useState("");
+    const [id,setID] = useState("")
     const getProfile = async () => {
         try {
             const res = await fetch("http://localhost:3001/dashboard/", {
@@ -22,7 +23,8 @@ const Dashboard = ({setAuth}) => {
             });
 
             const parseData = await res.json();
-            setName(parseData.librarianname || parseData.studentname || parseData.lecturername || parseData.adminName   );
+            setName(parseData.librarianname || parseData.studentname || parseData.lecturername || parseData.adminname   );
+            setID(parseData.librarianid || parseData.studentid || parseData.lecturerid || parseData.adminid   );
             console.log(parseData);
         } catch (err) {
             console.error(err.message);
@@ -48,6 +50,7 @@ const Dashboard = ({setAuth}) => {
             <AppBar/>
             <div>
                 <h2 onClick={e => logout(e)}>Welcome  {name}</h2>
+                <h2 onClick={e => logout(e)}>Welcome  {id}</h2>
             </div>
 
             {/*<button onClick={e => logout(e)}>*/}

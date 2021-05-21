@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const InputUser = () => {
 
-
+    const [studentid, setStudentID] = useState("")
     const [studentname, setStudentName] = useState("")
     const [email, setStudentEmail] = useState("")
     const [sex, setSex] = useState("")
@@ -51,7 +51,7 @@ const InputUser = () => {
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = { studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship };
+            const body = {studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship };
             const response = await fetch("http://localhost:3001/student-user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -72,6 +72,17 @@ const InputUser = () => {
             <h1 >Add Student Details</h1>
             <div>
                 <form style={{width: 800,height: 450, padding:5,fontSize:15}} onSubmit={onSubmitForm}>
+                    <label>Student ID</label>
+                    <br></br>
+                    <br></br>
+                    <input
+                        required
+                        type="text"
+                        value={studentid}
+                        onChange={e => setStudentID(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
 
                     <label>Student Name</label>
                     <br></br>

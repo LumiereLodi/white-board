@@ -34,7 +34,7 @@ app.post("/student-user",validInfo, async(req,res)=>{
         }
 
 
-        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship} = req.body;
+        const{studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus ,dateofbirth,citizenship,studentid} = req.body;
         const randomID = math();
 
         if(email ==="" || studentname ===""){
@@ -46,7 +46,7 @@ app.post("/student-user",validInfo, async(req,res)=>{
         }
 
         const newUser = await db.query("INSERT INTO student(studentid,studentname, email,sex, academicYear, phonenumber,startingdate, residenceAddress, academicStatus,dateofbirth,citizenship) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
-            [randomID, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship]);
+            [studentid, studentname, email,sex, academicYear, phonenumber,startingdate, residentialaddress, academicStatus,dateofbirth,citizenship]);
         res.json(newUser.rows[0]);
         console.log(req.body);
     }
@@ -54,7 +54,48 @@ app.post("/student-user",validInfo, async(req,res)=>{
         console.log(e)
     }
 });
+//GET LIbarian
+app.post("/librarian-user",validInfo, async(req,res)=>{
+    try{
+
+        function validEmail(userEmail) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
+        }
+
+
+        const{librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid} = req.body;
+        const randomID = math();
+
+        if(email ==="" || librarianname ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.json("Invalid Email or password");
+        }
+
+        const newUser = await db.query("INSERT INTO librarian(librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
+            [librarianname, email,sex, phonenumber, residenceAddress ,dateofbirth,librarianid]);
+        res.json(newUser.rows[0]);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
 //get all users
+app.get("/librarian-user", async(req,res)=>{
+    try{
+        const allLibarian = await db.query("SELECT * FROM librarian")
+        res.json(allLibarian.rows);
+        console.log(req.body);
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
 app.get("/student-user", async(req,res)=>{
     try{
         const allStudent = await db.query("SELECT * FROM student")
@@ -297,6 +338,7 @@ app.post("/register", validInfo, async (req, res)=>{
         }
 
         else if(profession === administrator){
+            // return res.status(401).json("Welcome Admin");
             const administrator = await db.query("SELECT * FROM administrator WHERE email = $1", [email]);
             if (administrator.rows.length !== 0) {
                 console.log("user exist");
@@ -362,7 +404,7 @@ app.get("/dashboard", authorization, async (req, res)=>{
 
         if(student.rows.length !== 0){
             const user = await db.query(
-                "SELECT studentname FROM student WHERE email = $1",
+                "SELECT (studentname,studentid) FROM student WHERE email = $1",
                 [req.user]);
             res.json(user.rows[0]);
 
@@ -388,7 +430,7 @@ app.get("/dashboard", authorization, async (req, res)=>{
         }
         else if(administrator.rows.length !== 0){
             const user = await db.query(
-                "SELECT adminname FROM administrator WHERE email = $1",
+                "SELECT adminname,adminid FROM administrator WHERE email = $1",
                 [req.user]);
 
             res.json(user.rows[0]);

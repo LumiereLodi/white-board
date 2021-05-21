@@ -85,6 +85,7 @@ export default function CustomizedTables() {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Full Name</StyledTableCell>
+                            <StyledTableCell align="center">Student ID</StyledTableCell>
                             <StyledTableCell align="center">Email</StyledTableCell>
                             <StyledTableCell align="right">Contact Number</StyledTableCell>
                             <StyledTableCell align="right">Date of Birth</StyledTableCell>
@@ -103,6 +104,7 @@ export default function CustomizedTables() {
                                 <StyledTableCell component="th" scope="row">
                                     {row.studentname}
                                 </StyledTableCell>
+                                <StyledTableCell align="center">{row.studentid}</StyledTableCell>
                                 <StyledTableCell align="center">{row.email}</StyledTableCell>
                                 <StyledTableCell align="right">{row.phonenumber}</StyledTableCell>
                                 <StyledTableCell align="right">{row.dateofbirth}</StyledTableCell>
