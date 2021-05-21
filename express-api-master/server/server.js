@@ -2,7 +2,20 @@ require("dotenv").config();
 const express = require("express");
 const db = require("./db")
 const app = express();
+const cors = require("cors")
 
+//bcrypt
+const bcrypt = require('bcrypt')
+//jwt generator
+const jwtGenerator = require('./jwtGenerator')
+//import math for randomID
+//const math = require('math-random')
+//authorization of routes
+const authorization = require('./authorization')
+//validation
+const validInfo = require('./validInfo')
+
+app.use(cors());
 //MIDDLEWARE TO GET DATA FROM THE BODY. IT CONVERTS THE DATA TO A JAVASCRIPT OBJECT.
 app.use(express.json());
 
@@ -123,7 +136,7 @@ app.get("/onlineclass/:id/:semester/:academicyear", async (req, res) => {
             "ON onlineclass.unitcode = unit.unitcode\n" +
             "WHERE onlineclass.lecturerid = $1 \n" +
             "AND onlineclass.semester = $2\n" +
-            "AND onlineclass.academicyear = $3", [req.params.id,req.params.semester,req.params.academicyear ]);
+            "AND onlineclass.academicyear = TO_CHAR(NOW(), 'dd/mm/yyyy') ", [req.params.id,req.params.semester,req.params.academicyear ]);
         console.log(result)
         await res.status(200).json({
             status: "success",
@@ -138,6 +151,28 @@ app.get("/onlineclass/:id/:semester/:academicyear", async (req, res) => {
     }
 });
 
+app.get("/onlineclass/:unitcode/:semester/", async (req, res) => {
+    try{
+        const result = await db.query(" SELECT onlineclass.*, unit.unitname\n" +
+            "FROM onlineclass\n" +
+            "LEFT JOIN unit\n" +
+            "ON onlineclass.unitcode = unit.unitcode\n" +
+            "WHERE onlineclass.unitcode = $1 \n" +
+            "AND onlineclass.semester = $2\n" +
+            "AND onlineclass.academicyear = TO_CHAR(NOW(), 'yyyy') ", [req.params.unitcode,req.params.semester]);
+        console.log(result)
+        await res.status(200).json({
+            status: "success",
+            results: result.rows.length,
+            data: {
+                studentTimeTable: result.rows,
+            }
+        })
+
+    }catch (err) {
+        console.log(err)
+    }
+});
 
 //FOR ADMIN
 app.get("/student", async (req, res) => {
@@ -585,12 +620,11 @@ app.post("/timetable", async (req, res) => {
             "timetable (unitcode, studentid,lecturerid,classtime,\n" +
             "\t\t semester,academicyear,classday)\n" +
             "VALUES ($1,$2,$3,$4,(select unit.semester from unit where unit.unitcode = $1)," +
-            "$5,$6) RETURNING * ", [
+            "TO_CHAR(NOW(), 'yyyy'),$5) RETURNING * ", [
             req.body.unitcode,
             req.body.studentid,
             req.body.lecturerid,
             req.body.classtime,
-            req.body.academicyear,
             req.body.classday,
 
 
@@ -1038,11 +1072,13 @@ app.get("/academicreport/:studentid/:academicyear/:semester",async (req, res) =>
 });
 app.get("/availableunit/:studentid",async (req, res) => {
     try{
-        const result = await db.query("select unit.*\n" +
-            "from unit\n" +
-            "left join student \n" +
-            "on student.faculty = unit.faculty\n" +
-            "where student.studentid = $1", [
+        const result = await db.query("select unit.*, lecturer.lecturersurname, lecturer.lecturergivenname\n" +
+            "            from unit\n" +
+            "            left join student \n" +
+            "            on student.faculty = unit.faculty\n" +
+            "            left join lecturer\n" +
+            "             on lecturer.lecturerid = unit.lecturerid\n" +
+            "            where student.studentid = $1 ", [
             req.params.studentid
 
         ]);
@@ -1051,7 +1087,7 @@ app.get("/availableunit/:studentid",async (req, res) => {
             status: "success",
             results: result.rows.length,
             data: {
-                newStudent: result.rows[0],
+                newStudent: result.rows,
             }
         })
 
@@ -1084,6 +1120,323 @@ app.post("/studentunit",async (req, res) => {
         console.log(err)
     }
 });
+
+
+
+/***********************************************************************************************/
+                                        /**LOGIN AND REGISTRATION*/
+/***********************************************************************************************/
+
+//Login
+app.post("/login", validInfo, async (req,res)=>{
+    const {email, password} = req.body;
+
+    function validEmail(userEmail) {
+        return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(userEmail);
+    }
+
+
+    try {
+
+        const student = await db.query(
+            "SELECT email FROM student WHERE email = $1",
+            [email]);
+        const lecturer = await db.query(
+            "SELECT email FROM lecturer WHERE email = $1",
+            [email]);
+        const librarian = await db.query(
+            "SELECT email FROM librarian WHERE email = $1",
+            [email]);
+        const administrator = await db.query(
+            "SELECT email FROM administrator WHERE email = $1",
+            [email]);
+
+        if(email ==="" || password ===""){
+            return res.status(401).json("Empty");
+        }
+
+        if (!validEmail(email)) {
+            return res.status(401).json("Invalid Email or password");
+        }
+
+
+
+
+
+        if(student.rows.length !== 0){
+            const user = await db.query("SELECT * FROM student WHERE email = $1", [email])
+            if (user.rows.length === 0) {
+                return res.status(401).json("Invalid Credential");
+            }
+            //check password matches in db
+            const validPassword = await bcrypt.compare(password, user.rows[0].password);
+            console.log("valid password:" + validPassword);
+            if (!validPassword) {
+                return res.status(401).json("password or email is incorrect")
+            }
+
+            //generate jwt token
+            const token = jwtGenerator(user.rows[0].email);
+            res.json({token});
+            console.log("success")
+            console.log("student")
+        }
+        else if(lecturer.rows.length !== 0){
+            const lecturer = await db.query("SELECT * FROM lecturer WHERE email = $1", [email]);
+            if (lecturer.rows.length === 0) {
+                return res.status(401).json("Invalid Credential");
+            }
+            const validPassword = await bcrypt.compare(password, lecturer.rows[0].password);
+            console.log("valid password:" + validPassword);
+            if (!validPassword) {
+                return res.status(401).json("password or email is incorrect")
+            }
+            const token = jwtGenerator(lecturer.rows[0].email);
+            res.json({token});
+            console.log("success")
+            console.log("lecturer")
+        }
+        else if(librarian.rows.length !== 0){
+            const librarian = await db.query("SELECT * FROM librarian WHERE email = $1", [email]);
+            if (librarian.rows.length === 0) {
+                return res.status(401).json("Invalid Credential");
+            }
+            const validPassword = await bcrypt.compare(password, librarian.rows[0].password);
+            console.log("valid password:" + validPassword);
+            if (!validPassword) {
+                return res.status(401).json("password or email is incorrect")
+            }
+            const token = jwtGenerator(librarian.rows[0].email);
+            res.json({token});
+            console.log("success")
+            console.log("librarian")
+        }
+        else if(administrator.rows.length !== 0){
+            const administrator = await db.query("SELECT * FROM administrator WHERE email = $1", [email]);
+            if (administrator.rows.length === 0) {
+                return res.status(401).json("Invalid Credential");
+            }
+            const validPassword = await bcrypt.compare(password, administrator.rows[0].password);
+            console.log("valid password:" + validPassword);
+            if (!validPassword) {
+                return res.status(401).json("password or email is incorrect")
+            }
+            const token = jwtGenerator(administrator.rows[0].email);
+            res.json({token});
+            console.log("success")
+            console.log("administrator")
+        }
+
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+
+    console.log("post login")
+    console.log("get id" + req.params.id)
+})
+
+//register
+app.post("/register", validInfo, async (req, res)=>{
+    const {name, email, password, password2, profession} =req.body;
+    const randomID = math();
+    const student = "student";
+    const librarian = "librarian";
+    const lecturer = "lecturer";
+    const administrator = "administrator";
+
+    try {
+        if (profession === student) {
+            const user = await db.query("SELECT * FROM student WHERE email = $1", [email])
+
+            if (user.rows.length !== 0) {
+                console.log("user exist");
+                return res.status(401).json("user exist");
+            }
+
+            if (password !== password2) {
+                return res.status(401).json("password do not match")
+            }
+
+            const saltRounds = 10;
+            const salt = await bcrypt.genSalt(saltRounds);
+            const bcryptPassword = await bcrypt.hash(password, salt);
+
+            const newUser = await db.query("INSERT INTO student(studentid,studentname, email, password) VALUES ($1,$2, $3,$4) RETURNING *", [randomID, name, email, bcryptPassword]);
+            //generate jwt token
+            const token = jwtGenerator(newUser.rows[0].email);
+            res.json({token});
+            console.log("student created ");
+
+            console.log("new user")
+
+        }
+
+        else if(profession === librarian){
+            const librarian = await db.query("SELECT * FROM librarian WHERE email = $1", [email]);
+            if (librarian.rows.length !== 0) {
+                console.log("user exist");
+                return res.status(401).json("user exist");
+            }
+            if(password !== password2){
+                return res.status(401).json("password do not match")
+            }
+
+            const saltRounds =10;
+            const salt = await bcrypt.genSalt(saltRounds);
+            if(password === password2){
+                const bcryptPassword = await bcrypt.hash(password,salt);
+                const newLibarian = await db.query("INSERT INTO librarian(librarianID, librarianName, email, password) VALUES ($1,$2, $3,$4) RETURNING *",[randomID,name, email, bcryptPassword]);
+                //generate jwt token
+                const token = jwtGenerator(newLibarian.rows[0].email);
+                res.json({token});
+                console.log("librarian created ");
+
+            }
+
+        }
+
+        else if(profession === lecturer){
+            const lecturer = await db.query("SELECT * FROM lecturer WHERE email = $1", [email]);
+            if (lecturer.rows.length !== 0) {
+                console.log("user exist");
+                return res.status(401).json("user exist");
+            }
+            if(password !== password2){
+                return res.status(401).json("password do not match")
+            }
+
+            const saltRounds =10;
+            const salt = await bcrypt.genSalt(saltRounds);
+            if(password === password2){
+                const bcryptPassword = await bcrypt.hash(password,salt);
+                const newLecturer = await db.query("INSERT INTO lecturer(lecturerID, lecturerName, email, password) VALUES ($1,$2, $3,$4) RETURNING *",[randomID,name, email, bcryptPassword]);
+                //generate jwt token
+                const token = jwtGenerator(newLecturer.rows[0].email);
+                res.json({token});
+                console.log("lecturer created ");
+
+            }
+
+        }
+
+        else if(profession === administrator){
+            const administrator = await db.query("SELECT * FROM administrator WHERE email = $1", [email]);
+            if (administrator.rows.length !== 0) {
+                console.log("user exist");
+                return res.status(401).json("user exist");
+            }
+            if(password !== password2){
+                return res.status(401).json("password do not match")
+            }
+
+            const saltRounds =10;
+            const salt = await bcrypt.genSalt(saltRounds);
+            if(password === password2){
+                const bcryptPassword = await bcrypt.hash(password,salt);
+                const newAdministrator = await db.query("INSERT INTO administrator(adminID, adminName, email, password) VALUES ($1,$2, $3,$4) RETURNING *",[randomID,name, email, bcryptPassword]);
+                //generate jwt token
+                const token = jwtGenerator(newAdministrator.rows[0].email);
+                res.json({token});
+                console.log("admin created ");
+
+            }
+
+        }
+
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+    console.log("post register")
+});
+
+//verify jwt token eveytime you refresh
+app.get("/is-verify", authorization, async(req, res) => {
+    try{
+
+        res.json(true);
+        console.log("is verify true")
+    }
+    catch (e) {
+        console.log(e)
+    }
+});
+
+
+//dashboard
+app.get("/dashboard", authorization, async (req, res)=>{
+    console.log("get dashboard");
+    console.log(req.user)
+    try{
+        const student = await db.query(
+            "SELECT email FROM student WHERE email = $1",
+            [req.user]);
+        const lecturer = await db.query(
+            "SELECT email FROM lecturer WHERE email = $1",
+            [req.user]);
+        const librarian = await db.query(
+            "SELECT email FROM librarian WHERE email = $1",
+            [req.user]);
+        const administrator = await db.query(
+            "SELECT email FROM administrator WHERE email = $1",
+            [req.user]);
+
+
+        if(student.rows.length !== 0){
+            const user = await db.query(
+                "SELECT studentname FROM student WHERE email = $1",
+                [req.user]);
+            res.json(user.rows[0]);
+
+            console.log("student")
+        }
+        else if(lecturer.rows.length !== 0){
+            const user = await db.query(
+                "SELECT lecturername FROM lecturer WHERE email = $1",
+                [req.user]);
+
+            res.json(user.rows[0]);
+
+            console.log("lecturer")
+        }
+        else if(librarian.rows.length !== 0){
+            const user = await db.query(
+                "SELECT librarianname FROM librarian WHERE email = $1",
+                [req.user]);
+
+            res.json(user.rows[0]);
+            console.log("tash name:" +   res.json(user.rows[0].librarianname))
+            console.log("librarian")
+        }
+        else if(administrator.rows.length !== 0){
+            const user = await db.query(
+                "SELECT adminname FROM administrator WHERE email = $1",
+                [req.user]);
+
+            res.json(user.rows[0]);
+            console.log("administrator")
+        }
+
+        console.log("try block");
+        const user = await db.query(
+            "SELECT studentname FROM student WHERE email = $1",
+            [req.user]);
+
+        res.json(user.rows[0]);
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+})
+
+/***********************************************************************************************/
+/***********************************************************************************************/
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`server listening on port ${port}...`)
