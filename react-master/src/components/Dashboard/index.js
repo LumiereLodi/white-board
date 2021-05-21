@@ -50,7 +50,6 @@ const Dashboard = ({setAuth}) => {
             <AppBar/>
             <div>
                 <h2 onClick={e => logout(e)}>Welcome  {name}</h2>
-                <h2 onClick={e => logout(e)}>Welcome  {id}</h2>
             </div>
 
             {/*<button onClick={e => logout(e)}>*/}

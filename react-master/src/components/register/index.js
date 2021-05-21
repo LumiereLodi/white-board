@@ -9,7 +9,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 
 const Register = ({ setAuth }) => {
-    const paperStyle = {padding :20, height : '70vh', width:300, margin: '0px auto'}
+    const paperStyle = {padding :20, height : '70vh', width:300, margin: '20px auto'}
     const avatarStyle = {backgroundColor:'#091477'}
     const [email, setUsername] = useState("");
     const [password, setPassword] = useState("");
